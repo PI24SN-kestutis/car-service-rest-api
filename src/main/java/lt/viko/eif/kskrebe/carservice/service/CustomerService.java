@@ -1,6 +1,7 @@
 package lt.viko.eif.kskrebe.carservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lt.viko.eif.kskrebe.carservice.exception.ResourceNotFoundException;
 import lt.viko.eif.kskrebe.carservice.model.Customer;
 import lt.viko.eif.kskrebe.carservice.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class CustomerService {
      */
     public Customer findById(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Klientas nerastas"));
+                .orElseThrow(() -> new ResourceNotFoundException("Klientas nerastas su id: " + id));
     }
 
 

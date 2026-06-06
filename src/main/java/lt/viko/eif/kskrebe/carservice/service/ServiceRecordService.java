@@ -2,6 +2,7 @@ package lt.viko.eif.kskrebe.carservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.dto.ServiceRecordRequest;
+import lt.viko.eif.kskrebe.carservice.exception.ResourceNotFoundException;
 import lt.viko.eif.kskrebe.carservice.model.Car;
 import lt.viko.eif.kskrebe.carservice.model.ServiceRecord;
 import lt.viko.eif.kskrebe.carservice.repository.CarRepository;
@@ -34,7 +35,7 @@ public class ServiceRecordService {
      */
     public ServiceRecord findById(Long id) {
         return serviceRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviso įrašas nerastas"));
+                .orElseThrow(() -> new ResourceNotFoundException("Serviso įrašas nerastas su id: " + id + "."));
     }
 
     /**
