@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.model.Car;
 import lt.viko.eif.kskrebe.carservice.service.CarService;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,37 @@ public class CarController {
         return carService.findAll();
     }
 
+
+    @GetMapping("/hateoas")
+    public CollectionModel<EntityModel<Car>> getAllCarsHateoas() {
+        List<EntityModel<Car>> cars = carService.findAll()
+                .stream()
+                .map(car -> {
+                    EntityModel<Car> model = EntityModel.of(car,
+                            linkTo(methodOn(CarController.class)
+                                    .getCarByIdHateoas(car.getId()))
+                                    .withSelfRel()
+                    );
+
+                    if (car.getCustomer() != null) {
+                        model.add(linkTo(methodOn(CustomerController.class)
+                                .getCustomerByIdHateoas(car.getCustomer().getId()))
+                                .withRel("customer"));
+                    }
+
+                    return model;
+                })
+                .toList();
+
+        return CollectionModel.of(cars,
+                linkTo(methodOn(CarController.class)
+                        .getAllCarsHateoas())
+                        .withSelfRel()
+        );
+    }
+
+
+
     /**
      * Grąžina vieną automobilį pagal identifikatorių.
      *
@@ -42,6 +76,29 @@ public class CarController {
     @GetMapping("/{id}")
     public Car getCar(@PathVariable Long id) {
         return carService.findById(id);
+    }
+
+
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<Car> getCarByIdHateoas(@PathVariable Long id) {
+        Car car = carService.findById(id);
+
+        EntityModel<Car> model = EntityModel.of(car,
+                linkTo(methodOn(CarController.class)
+                        .getCarByIdHateoas(id))
+                        .withSelfRel(),
+                linkTo(methodOn(CarController.class)
+                        .getAllCarsHateoas())
+                        .withRel("cars")
+        );
+
+        if (car.getCustomer() != null) {
+            model.add(linkTo(methodOn(CustomerController.class)
+                    .getCustomerByIdHateoas(car.getCustomer().getId()))
+                    .withRel("customer"));
+        }
+
+        return model;
     }
 
     /**

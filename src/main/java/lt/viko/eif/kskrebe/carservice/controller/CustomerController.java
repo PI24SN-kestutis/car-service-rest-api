@@ -4,6 +4,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.model.Customer;
 import lt.viko.eif.kskrebe.carservice.service.CustomerService;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +26,25 @@ public class CustomerController {
         return customerService.findAll();
     }
 
+    @GetMapping("/hateoas")
+    public CollectionModel<EntityModel<Customer>> getAllCustomersHateoas() {
+        List<EntityModel<Customer>> customers = customerService.findAll()
+                .stream()
+                .map(customer -> EntityModel.of(customer,
+                        linkTo(methodOn(CustomerController.class)
+                                .getCustomerByIdHateoas(customer.getId()))
+                                .withSelfRel()
+                ))
+                .toList();
+
+        return CollectionModel.of(customers,
+                linkTo(methodOn(CustomerController.class)
+                        .getAllCustomersHateoas())
+                        .withSelfRel()
+        );
+    }
+
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -34,8 +58,23 @@ public class CustomerController {
      * @return
      */
     @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
+    public Customer getCustomerById(@PathVariable Long id) {
         return customerService.findById(id);
+    }
+
+
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<Customer> getCustomerByIdHateoas(@PathVariable Long id) {
+        Customer customer = customerService.findById(id);
+
+        return EntityModel.of(customer,
+                linkTo(methodOn(CustomerController.class)
+                        .getCustomerByIdHateoas(id))
+                        .withSelfRel(),
+                linkTo(methodOn(CustomerController.class)
+                        .getAllCustomersHateoas())
+                        .withRel("customers")
+        );
     }
 
     /**

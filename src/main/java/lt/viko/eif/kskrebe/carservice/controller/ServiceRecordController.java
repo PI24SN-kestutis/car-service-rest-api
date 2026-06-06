@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.dto.ServiceRecordRequest;
 import lt.viko.eif.kskrebe.carservice.model.ServiceRecord;
 import lt.viko.eif.kskrebe.carservice.service.ServiceRecordService;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +38,42 @@ public class ServiceRecordController {
         return serviceRecordService.findAll();
     }
 
+    @GetMapping("/hateoas")
+    public CollectionModel<EntityModel<ServiceRecord>>
+    getAllServiceRecordsHateoas() {
+
+        List<EntityModel<ServiceRecord>> records =
+                serviceRecordService.findAll()
+                        .stream()
+                        .map(record -> {
+
+                            EntityModel<ServiceRecord> model =
+                                    EntityModel.of(record,
+                                            linkTo(methodOn(
+                                                    ServiceRecordController.class)
+                                                    .getServiceRecordByIdHateoas(
+                                                            record.getId()))
+                                                    .withSelfRel());
+
+                            if (record.getCar() != null) {
+                                model.add(
+                                        linkTo(methodOn(CarController.class)
+                                                .getCarByIdHateoas(
+                                                        record.getCar().getId()))
+                                                .withRel("car")
+                                );
+                            }
+
+                            return model;
+                        })
+                        .toList();
+
+        return CollectionModel.of(records,
+                linkTo(methodOn(ServiceRecordController.class)
+                        .getAllServiceRecordsHateoas())
+                        .withSelfRel());
+    }
+
     /**
      * Grąžina vieną serviso įrašą pagal identifikatorių.
      *
@@ -42,6 +83,43 @@ public class ServiceRecordController {
     @GetMapping("/{id}")
     public ServiceRecord getServiceRecord(@PathVariable Long id) {
         return serviceRecordService.findById(id);
+    }
+
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<ServiceRecord> getServiceRecordByIdHateoas(
+            @PathVariable Long id) {
+
+        ServiceRecord serviceRecord = serviceRecordService.findById(id);
+
+        EntityModel<ServiceRecord> model = EntityModel.of(serviceRecord,
+                linkTo(methodOn(ServiceRecordController.class)
+                        .getServiceRecordByIdHateoas(id))
+                        .withSelfRel(),
+
+                linkTo(methodOn(ServiceRecordController.class)
+                        .getAllServiceRecordsHateoas())
+                        .withRel("service-records")
+        );
+
+        if (serviceRecord.getCar() != null) {
+
+            model.add(
+                    linkTo(methodOn(CarController.class)
+                            .getCarByIdHateoas(serviceRecord.getCar().getId()))
+                            .withRel("car")
+            );
+
+            if (serviceRecord.getCar().getCustomer() != null) {
+                model.add(
+                        linkTo(methodOn(CustomerController.class)
+                                .getCustomerByIdHateoas(
+                                        serviceRecord.getCar().getCustomer().getId()))
+                                .withRel("customer")
+                );
+            }
+        }
+
+        return model;
     }
 
     /**
