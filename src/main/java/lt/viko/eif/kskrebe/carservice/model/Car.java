@@ -1,5 +1,6 @@
 package lt.viko.eif.kskrebe.carservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -58,8 +59,14 @@ public class Car {
     private String vin;
 
     /**
-     * Customer who owns this car.
+     * Klientas, kuriam priklauso automobilis.
+     *
+     * @JsonBackReference naudojama kaip atgalinė nuoroda į Customer
+     * objektą. Serializuojant automobilį į JSON šis laukas nėra
+     * įtraukiamas, todėl išvengiama begalinės rekursijos tarp
+     * Customer ir Car objektų.
      */
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
