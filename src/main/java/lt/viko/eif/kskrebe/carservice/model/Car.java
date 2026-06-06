@@ -1,6 +1,8 @@
 package lt.viko.eif.kskrebe.carservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -72,8 +74,13 @@ public class Car {
     private Customer customer;
 
     /**
-     * įrašai/istorija automobilio serviso.
+     * Automobilio serviso įrašų sąrašas.
+     *
+     * @JsonManagedReference naudojama tam, kad JSON atsakyme būtų
+     * rodomi automobilio serviso įrašai ir būtų išvengta begalinės
+     * rekursijos tarp Car ir ServiceRecord objektų.
      */
+    @JsonIgnoreProperties("car")
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceRecord> serviceRecords = new ArrayList<>();
 }

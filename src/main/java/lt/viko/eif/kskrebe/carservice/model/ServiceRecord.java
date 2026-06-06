@@ -1,8 +1,11 @@
 package lt.viko.eif.kskrebe.carservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -43,8 +46,9 @@ public class ServiceRecord {
     /**
      * Service price in euros.
      */
-    @DecimalMin(value = "0.00", message = "Price cannot be negative")
+    @DecimalMin(value = "0.00", message = "Kaina negali būti neigiama")
     @Column(precision = 10, scale = 2)
+    @NotNull(message = "Kaina privaloma")
     private BigDecimal price;
 
     /**
@@ -54,8 +58,13 @@ public class ServiceRecord {
     private LocalDate serviceDate;
 
     /**
-     * Car related to this service record.
+     * Automobilis, kuriam priklauso šis serviso įrašas.
+     *
+     * @JsonBackReference naudojama kaip atgalinė nuoroda į Car objektą.
+     * Serializuojant serviso įrašą į JSON šis laukas nėra įtraukiamas,
+     * todėl išvengiama begalinės rekursijos.
      */
+    @JsonIgnoreProperties("serviceRecords")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private Car car;
