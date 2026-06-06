@@ -42,6 +42,19 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(WeatherApiException.class)
+    public ProblemDetail handleWeatherApiException(WeatherApiException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                ex.getStatus(),
+                ex.getMessage()
+        );
+
+        problem.setTitle("Weather request failed");
+        problem.setProperty("timestamp", Instant.now());
+
+        return problem;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGeneralException(Exception ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
