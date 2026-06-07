@@ -10,10 +10,10 @@ import lt.viko.eif.kskrebe.carservice.service.WeatherService;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST controller for weather forecast endpoints.
+ * REST valdiklis, skirtas orų prognozių galiniams taškams (endpoints).
  *
- * <p>This controller exposes endpoints that use Meteo.lt weather data.
- * It provides both raw forecast data and simplified current weather data.</p>
+ * <p>Šis valdiklis atveria galinius taškus, kurie naudoja Meteo.lt orų duomenis.
+ * Jis pateikia tiek neapdorotus prognozių duomenis, tiek supaprastintus dabartinių orų duomenis.</p>
  */
 @Tag(name="Orų prognozių API", description = "Orų prognozių REST API")
 @RestController
@@ -24,12 +24,11 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     /**
-     * Returns raw long-term weather forecast data by Meteo.lt place code.
+     * Grąžina neapdorotus ilgalaikės orų prognozės duomenis pagal Meteo.lt vietos kodą.
      *
-     * @param placeCode Meteo.lt place code, for example "vilnius"
-     * @return raw weather forecast JSON as String
+     * @param placeCode Meteo.lt vietos kodas, pavyzdžiui "vilnius"
+     * @return neapdoroti orų prognozės JSON duomenys kaip tekstas (String)
      */
-
     @Operation(summary = "Gauti orų prognozę pagal vietos kodą", description = "Grąžina orų prognozę nurodytam vietos kodui")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Sėkmingai gauta orų prognozė"),
@@ -41,12 +40,11 @@ public class WeatherController {
     }
 
     /**
-     * Returns simplified current weather forecast by Meteo.lt place code.
+     * Grąžina supaprastintą dabartinę orų prognozę pagal Meteo.lt vietos kodą.
      *
-     * @param placeCode Meteo.lt place code, for example "vilnius"
-     * @return simplified current weather response
+     * @param placeCode Meteo.lt vietos kodas, pavyzdžiui "vilnius"
+     * @return supaprastintas dabartinių orų atsakymas
      */
-
     @Operation(summary = "Gauti dabartinę orų prognozę pagal vietos kodą", description = "Grąžina dabartinę orų prognozę nurodytam vietos kodui")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Sėkmingai gauta dabartinė orų prognozė"),
@@ -60,4 +58,3 @@ public class WeatherController {
     }
 
 }
-

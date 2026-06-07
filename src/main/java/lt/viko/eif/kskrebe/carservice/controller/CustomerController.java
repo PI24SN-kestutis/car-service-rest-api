@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST valdiklis klientų valdymui.
+ *
+ * Teikia endpointus klientų sukūrimui, peržiūrai,
+ * atnaujinimui ir pašalinimui.
+ */
 @Tag(
         name = "Customer API",
         description = "Klientų valdymo REST API"
@@ -29,7 +35,11 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-
+    /**
+     * Grąžina visų klientų sąrašą.
+     *
+     * @return klientų sąrašas
+     */
     @Operation(
             summary = "Gauti visus klientus",
             description = "Grąžina visų sistemoje esančių klientų sąrašą."
@@ -42,9 +52,14 @@ public class CustomerController {
         return customerService.findAll();
     }
 
+    /**
+     * Grąžina visų klientų sąrašą su HATEOAS nuorodomis.
+     *
+     * @return klientų kolekcijos modelis su nuorodomis
+     */
     @Operation(
-            summary = "Gauti visus klientus",
-            description = "Grąžina visų sistemoje esančių klientų sąrašą."
+            summary = "Gauti visus klientus (HATEOAS)",
+            description = "Grąžina visų sistemoje esančių klientų sąrašą su HATEOAS naršymo nuorodomis."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Klientų sąrašas sėkmingai grąžintas")
@@ -68,7 +83,12 @@ public class CustomerController {
     }
 
 
-
+    /**
+     * Sukuria naują klientą.
+     *
+     * @param customer kliento duomenys
+     * @return sukurtas klientas
+     */
     @Operation(
             summary = "Sukurti naują klientą",
             description = "Sukuria naują klientą duomenų bazėje."
@@ -84,11 +104,11 @@ public class CustomerController {
     }
 
     /**
-     * gaunamas klientas pagal id
-     * @param id
-     * @return
+     * Grąžina vieną klientą pagal identifikatorių.
+     *
+     * @param id kliento identifikatorius
+     * @return rastas klientas
      */
-
     @Operation(
             summary = "Gauti klientą pagal ID",
             description = "Grąžina kliento informaciją pagal pateiktą ID."
@@ -103,7 +123,20 @@ public class CustomerController {
         return customerService.findById(id);
     }
 
-
+    /**
+     * Grąžina vieną klientą pagal identifikatorių su HATEOAS nuorodomis.
+     *
+     * @param id kliento identifikatorius
+     * @return kliento esybės modelis su nuorodomis
+     */
+    @Operation(
+            summary = "Gauti klientą pagal ID (HATEOAS)",
+            description = "Grąžina kliento informaciją pagal pateiktą ID su HATEOAS naršymo nuorodomis."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Klientas sėkmingai grąžintas"),
+            @ApiResponse(responseCode = "404", description = "Klientas nerastas")
+    })
     @GetMapping("/hateoas/{id}")
     public EntityModel<Customer> getCustomerByIdHateoas(@PathVariable Long id) {
         Customer customer = customerService.findById(id);
@@ -119,10 +152,11 @@ public class CustomerController {
     }
 
     /**
-     * klientas atnaujinamas
-     * @param id
-     * @param customer
-     * @return
+     * Atnaujina kliento duomenis.
+     *
+     * @param id kliento identifikatorius
+     * @param customer atnaujinti kliento duomenys
+     * @return atnaujintas klientas
      */
     @Operation(
             summary = "Atnaujinti klientą",
@@ -141,8 +175,9 @@ public class CustomerController {
     }
 
     /**
-     * panaikinamas kliento įrašas pagal id
-     * @param id
+     * Pašalina klientą.
+     *
+     * @param id kliento identifikatorius
      */
     @Operation(
             summary = "Ištrinti klientą",

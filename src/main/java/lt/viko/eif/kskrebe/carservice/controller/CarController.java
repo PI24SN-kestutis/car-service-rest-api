@@ -52,7 +52,18 @@ public class CarController {
         return carService.findAll();
     }
 
-
+    /**
+     * Grąžina visų automobilių sąrašą su HATEOAS nuorodomis.
+     *
+     * @return automobilių kolekcijos modelis su nuorodomis
+     */
+    @Operation(
+            summary = "Gauti visus automobilius (HATEOAS)",
+            description = "Grąžina visų sistemoje esančių automobilių sąrašą su HATEOAS naršymo nuorodomis."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Automobilių sąrašas sėkmingai grąžintas")
+    })
     @GetMapping("/hateoas")
     public CollectionModel<EntityModel<Car>> getAllCarsHateoas() {
         List<EntityModel<Car>> cars = carService.findAll()
@@ -102,7 +113,20 @@ public class CarController {
         return carService.findById(id);
     }
 
-
+    /**
+     * Grąžina vieną automobilį pagal identifikatorių su HATEOAS nuorodomis.
+     *
+     * @param id automobilio identifikatorius
+     * @return automobilio esybės modelis su nuorodomis
+     */
+    @Operation(
+            summary = "Gauti automobilį pagal ID (HATEOAS)",
+            description = "Grąžina automobilį pagal pateiktą ID su HATEOAS naršymo nuorodomis."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Automobilis sėkmingai grąžintas"),
+            @ApiResponse(responseCode = "404", description = "Automobilis nerastas")
+    })
     @GetMapping("/hateoas/{id}")
     public EntityModel<Car> getCarByIdHateoas(@PathVariable Long id) {
         Car car = carService.findById(id);

@@ -48,6 +48,15 @@ public class ServiceRecordController {
         return serviceRecordService.findAll();
     }
 
+    /**
+     * Grąžina visų serviso įrašų sąrašą su HATEOAS nuorodomis.
+     *
+     * @return serviso įrašų kolekcijos modelis su nuorodomis
+     */
+    @Operation(summary = "Gauti visus serviso įrašus (HATEOAS)", description = "Grąžina visų serviso įrašų sąrašą su HATEOAS naršymo nuorodomis")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Serviso įrašų sąrašas sėkmingai grąžintas")
+    })
     @GetMapping("/hateoas")
     public CollectionModel<EntityModel<ServiceRecord>>
     getAllServiceRecordsHateoas() {
@@ -100,6 +109,17 @@ public class ServiceRecordController {
         return serviceRecordService.findById(id);
     }
 
+    /**
+     * Grąžina vieną serviso įrašą pagal identifikatorių su HATEOAS nuorodomis.
+     *
+     * @param id serviso įrašo identifikatorius
+     * @return serviso įrašo esybės modelis su nuorodomis
+     */
+    @Operation(summary = "Gauti serviso įrašą pagal ID (HATEOAS)", description = "Grąžina vieną serviso įrašą pagal identifikatorių su HATEOAS naršymo nuorodomis")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Serviso įrašas sėkmingai grąžintas"),
+            @ApiResponse(responseCode = "404", description = "Serviso įrašas nerastas")
+    })
     @GetMapping("/hateoas/{id}")
     public EntityModel<ServiceRecord> getServiceRecordByIdHateoas(
             @PathVariable Long id) {
