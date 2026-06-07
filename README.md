@@ -192,5 +192,155 @@ Galimybės:
 - DTO transformavimas.
 - Aktualios prognozės pateikimas klientui.
 
-# Projekto struktūra
+## Projekto struktūra
+
+```text
+src
+├── main
+│   ├── java
+│   │   └── lt.viko.eif.kskrebe.carservice
+│   │       ├── config
+│   │       ├── controller
+│   │       ├── dto
+│   │       ├── exception
+│   │       ├── model
+│   │       ├── repository
+│   │       └── service
+│   └── resources
+│       └── application.properties
+│
+└── test
+    ├── java
+    │   └── lt.viko.eif.kskrebe.carservice
+    │       ├── controller
+    │       ├── cucumber
+    │       └── service
+    │
+    └── resources
+        ├── application-test.properties
+        └── features
+```
+
+## Duomenų bazės schema
+
+Sistemoje naudojamos trys pagrindinės lentelės:
+
+### customers
+
+Saugo klientų informaciją.
+
+| Laukas       | Aprašymas             |
+| ------------ | --------------------- |
+| id           | Pirminis raktas       |
+| first_name   | Kliento vardas        |
+| last_name    | Kliento pavardė       |
+| email        | El. paštas (unikalus) |
+| phone_number | Telefono numeris      |
+
+### cars
+
+Saugo klientų automobilius.
+
+| Laukas          | Aprašymas                |
+| --------------- | ------------------------ |
+| id              | Pirminis raktas          |
+| brand           | Automobilio markė        |
+| model           | Modelis                  |
+| production_year | Pagaminimo metai         |
+| vin             | VIN numeris (unikalus)   |
+| customer_id     | Kliento identifikatorius |
+
+### service_records
+
+Saugo automobilių aptarnavimo istoriją.
+
+| Laukas       | Aprašymas                    |
+| ------------ | ---------------------------- |
+| id           | Pirminis raktas              |
+| service_type | Aptarnavimo tipas            |
+| description  | Darbų aprašymas              |
+| service_date | Aptarnavimo data             |
+| cost         | Paslaugos kaina              |
+| car_id       | Automobilio identifikatorius |
+
+## Sistemos ryšiai
+
+```text
+Customer
+    │
+    └───< Car
+                │
+                └───< ServiceRecord
+```
+
+Vienas klientas gali turėti daug automobilių.
+
+Vienas automobilis gali turėti daug serviso įrašų.
+
+## HATEOAS realizacija
+
+Projektas naudoja Spring HATEOAS biblioteką.
+
+Pavyzdinis atsakymas:
+
+```json
+{
+  "id": 1,
+  "firstName": "Jonas",
+  "lastName": "Jonaitis",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/customers/1"
+    }
+  }
+}
+```
+
+## Klaidų apdorojimas
+
+Visos klaidos apdorojamos centralizuotai naudojant GlobalExceptionHandler.
+
+Naudojamas RFC 9457 Problem Details formatas.
+
+Pavyzdys:
+
+```json
+{
+  "detail": "Klientas nerastas su id: 5",
+  "instance": "/api/customers/5",
+  "status": 404,
+  "title": "Resource not found",
+  "timestamp": "2026-06-07T10:00:00Z"
+}
+```
+
+## Testavimo rezultatai
+
+Įgyvendinti testai:
+
+### Unit testai
+
+* CustomerServiceTest
+* CarServiceTest
+* ServiceRecordServiceTest
+
+### Integraciniai testai
+
+* CustomerControllerIntegrationTest
+
+### BDD testai (Cucumber)
+
+* Kliento sukūrimas
+* Automobilio sukūrimas
+* Serviso įrašo sukūrimas
+
+Visi testai vykdomi naudojant H2 testinę duomenų bazę.
+
 ## Ateities plėtros galimybės
+
+* Vartotojų autentifikacija ir autorizacija (Spring Security).
+* Automobilių techninės apžiūros priminimai.
+* El. pašto pranešimai klientams.
+* Serviso rezervacijų sistema.
+* PDF sąskaitų generavimas.
+* Automobilių remonto statistika ir ataskaitos.
