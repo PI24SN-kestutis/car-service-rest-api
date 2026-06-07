@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.exception.WeatherApiException;
 import lt.viko.eif.kskrebe.carservice.dto.WeatherResponse;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -27,6 +28,14 @@ public class WeatherService {
 
     private final RestClient restClient;
 
+
+    /**
+     * Gets raw long-term weather forecast JSON from Meteo.lt by place code.
+     *
+     * @param placeCode Meteo.lt place code
+     * @return raw JSON response from Meteo.lt
+     */
+    @Cacheable(value = "weatherRaw", key = "#placeCode")
     public String getWeatherByPlaceCode(String placeCode) {
         return restClient.get()
                 .uri("/places/{placeCode}/forecasts/long-term", placeCode)
@@ -34,6 +43,15 @@ public class WeatherService {
                 .body(String.class);
     }
 
+    /**
+     * Gets the current weather forecast for a given Meteo.lt place code.
+     *
+     * <p>The result is cached to avoid repeated external API calls for the same place code.</p>
+     *
+     * @param placeCode Meteo.lt place code, for example "vilnius"
+     * @return simplified current weather response
+     */
+    @Cacheable(value = "currentWeather", key = "#placeCode")
     public WeatherResponse getCurrentWeather(String placeCode) {
         String responseBody;
         try {
