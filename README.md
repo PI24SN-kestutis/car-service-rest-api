@@ -344,3 +344,33 @@ Visi testai vykdomi naudojant H2 testinę duomenų bazę.
 * Serviso rezervacijų sistema.
 * PDF sąskaitų generavimas.
 * Automobilių remonto statistika ir ataskaitos.
+
+## Projekto paleidimas
+
+```bash
+mvn spring-boot:run
+
+Swagger UI:
+http://localhost:8080/swagger-ui/index.html
+```
+## Testų paleidimas
+```bash
+mvn clean test
+```
+## JavaDoc generavimas
+```bash
+mvn javadoc:javadoc
+```
+## CACHE
+```bash
+Meteo.lt užklausoms naudojamas Spring Cache mechanizmas.
+Pirmoji užklausa kreipiasi į išorinį API, pakartotinė tokia pati užklausa grąžinama iš cache.
+```
+## POSTMAN
+- kolekcija saugoma
+```bash
+postman/car-service-rest-api.postman_collection.json
+```
+
+
+
