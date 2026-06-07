@@ -92,3 +92,105 @@ Run → RunCucumberTest
 * Service Record Creation
 
 Visi scenarijai vykdomi naudojant Spring Boot kontekstą ir H2 testinę duomenų bazę.
+
+## Duomenų modelis
+
+### Customer
+
+Klientas sistemoje.
+
+Laukai:
+
+- id
+- firstName
+- lastName
+- email
+- phoneNumber
+
+Ryšiai:
+
+- Vienas klientas gali turėti daug automobilių.
+
+### Car
+
+Automobilis priklausantis klientui.
+
+Laukai:
+
+- id
+- brand
+- model
+- productionYear
+- vin
+
+Ryšiai:
+
+- Priklauso vienam klientui.
+- Gali turėti daug serviso įrašų.
+
+### ServiceRecord
+
+Automobilio aptarnavimo įrašas.
+
+Laukai:
+
+- id
+- serviceType
+- description
+- serviceDate
+- cost
+
+Ryšiai:
+
+- Priklauso vienam automobiliui.
+
+## Klaidų apdorojimas
+
+Projektas naudoja centralizuotą klaidų apdorojimą naudojant:
+
+- GlobalExceptionHandler
+- ProblemDetail
+
+Pavyzdys:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Customer not found",
+  "status": 404,
+  "detail": "Customer with id 5 not found"
+}
+```
+
+## HATEOAS
+
+Projektas naudoja Spring HATEOAS.
+
+Atsakymuose pateikiamos navigacinės nuorodos.
+
+Pavyzdys:
+
+```json
+{
+  "id": 1,
+  "firstName": "Jonas",
+  "_links": {
+    "self": {
+      "href": "/api/customers/1"
+    }
+  }
+}
+```
+
+## Meteo.lt integracija
+
+Projektas naudoja RestClient ir Meteo.lt API.
+
+Galimybės:
+
+- Dabartinių orų gavimas.
+- DTO transformavimas.
+- Aktualios prognozės pateikimas klientui.
+
+# Projekto struktūra
+## Ateities plėtros galimybės
