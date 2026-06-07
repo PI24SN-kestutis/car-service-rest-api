@@ -1,6 +1,7 @@
 package lt.viko.eif.kskrebe.carservice.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -31,6 +32,7 @@ public class Customer {
     /**
      * Customer first name.
      */
+    @Schema(description = "Kliento vardas", example = "Jonas", required = true)
     @NotBlank(message = "First name is required")
     @Column(name = "first_name", nullable = false)
     private String firstName;

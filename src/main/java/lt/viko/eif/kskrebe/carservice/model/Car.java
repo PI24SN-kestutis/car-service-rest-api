@@ -3,6 +3,7 @@ package lt.viko.eif.kskrebe.carservice.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -56,6 +57,7 @@ public class Car {
     /**
      * Vehicle identification number.
      */
+    @Schema(description = "transporto VIN numeris", example = "1HGCM82633A004352")
     @NotBlank(message = "VIN is required")
     @Column(nullable = false, unique = true, length = 50)
     private String vin;
