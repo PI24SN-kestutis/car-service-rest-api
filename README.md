@@ -372,5 +372,11 @@ Pirmoji užklausa kreipiasi į išorinį API, pakartotinė tokia pati užklausa 
 postman/car-service-rest-api.postman_collection.json
 ```
 
+## TRELLO
+```bash
+susijęs projektas: https://github.com/PI24SN-kestutis/Trello_from_desktop.git
+projektas sukurtas patogumui.
+```
+
 
 
