@@ -140,7 +140,7 @@ public class ServiceRecordController {
     /**
      * Sukuria naują serviso įrašą.
      *
-     * @param 'serviceRecord' serviso įrašo duomenys
+     * @param  request nauji serviso įrašo duomenys
      * @return sukurtas serviso įrašas
      */
     @Operation(summary = "Sukurti naują serviso įrašą", description = "Sukurti naują serviso įrašą su pateiktais duomenimis")

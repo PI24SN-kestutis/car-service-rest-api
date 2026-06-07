@@ -41,7 +41,7 @@ public class ServiceRecordService {
     /**
      * Išsaugo naują serviso įrašą.
      *
-     * @param serviceRecord serviso įrašo duomenys
+     * @param request nauji serviso įrašo duomenys
      * @return išsaugotas serviso įrašas
      */
     public ServiceRecord create(ServiceRecordRequest request) {
