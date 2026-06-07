@@ -1,5 +1,9 @@
 package lt.viko.eif.kskrebe.carservice.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lt.viko.eif.kskrebe.carservice.dto.ServiceRecordRequest;
@@ -21,6 +25,7 @@ import java.util.List;
  * Teikia endpointus serviso įrašų sukūrimui, peržiūrai,
  * atnaujinimui ir pašalinimui.
  */
+@Tag(name = "Serviso įrašų API", description = "Serviso įrašų REST API")
 @RestController
 @RequestMapping("/api/service-records")
 @RequiredArgsConstructor
@@ -33,6 +38,11 @@ public class ServiceRecordController {
      *
      * @return serviso įrašų sąrašas
      */
+    @Operation(summary = "Gauti visus serviso įrašus", description = "Grąžina visų serviso įrašų sąrašą")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Serviso įrašų sąrašas sėkmingai grąžintas"),
+            @ApiResponse(responseCode = "404", description = "Serviso įrašų nerasta")
+    })
     @GetMapping
     public List<ServiceRecord> getAllServiceRecords() {
         return serviceRecordService.findAll();
@@ -80,6 +90,11 @@ public class ServiceRecordController {
      * @param id serviso įrašo identifikatorius
      * @return rastas serviso įrašas
      */
+    @Operation(summary = "Gauti serviso įrašą pagal ID", description = "Grąžina vieną serviso įrašą pagal identifikatorių")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Serviso įrašas sėkmingai grąžintas"),
+            @ApiResponse(responseCode = "404", description = "Serviso įrašas nerastas")
+    })
     @GetMapping("/{id}")
     public ServiceRecord getServiceRecord(@PathVariable Long id) {
         return serviceRecordService.findById(id);
@@ -125,9 +140,14 @@ public class ServiceRecordController {
     /**
      * Sukuria naują serviso įrašą.
      *
-     * @param serviceRecord serviso įrašo duomenys
+     * @param 'serviceRecord' serviso įrašo duomenys
      * @return sukurtas serviso įrašas
      */
+    @Operation(summary = "Sukurti naują serviso įrašą", description = "Sukurti naują serviso įrašą su pateiktais duomenimis")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Serviso įrašas sukurtas"),
+            @ApiResponse(responseCode = "400", description = "Neteisingi duomenys")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceRecord createServiceRecord(@Valid @RequestBody ServiceRecordRequest request) {
@@ -141,6 +161,11 @@ public class ServiceRecordController {
      * @param serviceRecord atnaujinti serviso įrašo duomenys
      * @return atnaujintas serviso įrašas
      */
+    @Operation(summary = "Atnaujinti serviso įrašą", description = "Atnaujinti serviso įrašą pagal identifikatorių su naujais duomenimis")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Serviso įrašas atnaujintas"),
+            @ApiResponse(responseCode = "404", description = "Serviso įrašas nerastas")
+    })
     @PutMapping("/{id}")
     public ServiceRecord updateServiceRecord(
             @PathVariable Long id,
@@ -154,6 +179,11 @@ public class ServiceRecordController {
      *
      * @param id serviso įrašo identifikatorius
      */
+    @Operation(summary = "Ištrinti serviso įrašą", description = "Pašalina serviso įrašą pagal identifikatorių")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Serviso įrašas ištrintas"),
+            @ApiResponse(responseCode = "404", description = "Serviso įrašas nerastas")
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteServiceRecord(@PathVariable Long id) {
